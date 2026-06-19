@@ -46,17 +46,22 @@ npm install
 npm start
 ```
 
-`npm start` keeps the terminal open. To run it in the background and free the console:
+`npm start` keeps the terminal open. To run it in the background, detached from the terminal:
 
 ```bash
-nohup ./node_modules/.bin/electron . > /dev/null 2>&1 &
+cd /path/to/grafana-scope
+nohup ./node_modules/.bin/electron . >> ~/Library/Logs/grafana-menubar.log 2>&1 &
+disown
 ```
 
 Or after a global install:
 
 ```bash
-nohup grafana-menubar > /dev/null 2>&1 &
+nohup grafana-menubar >> ~/Library/Logs/grafana-menubar.log 2>&1 &
+disown
 ```
+
+`disown` prevents macOS Terminal from killing the app when you close the window. If Terminal asks whether to terminate running processes, choose **Cancel** or close the window only after running `disown`.
 
 To stop the app, use **Settings → Quit**, or from the project directory:
 
@@ -105,8 +110,8 @@ The `silenced=false` filter is in the API query only — the app does not silenc
 |---------|-------------|
 | `npm install` | Install dependencies |
 | `npm start` | Run the app locally (foreground, keeps terminal open) |
-| `nohup ./node_modules/.bin/electron . > /dev/null 2>&1 &` | Run locally in background |
-| `nohup grafana-menubar > /dev/null 2>&1 &` | Run global install in background |
+| `nohup ./node_modules/.bin/electron . >> ~/Library/Logs/grafana-menubar.log 2>&1 &` then `disown` | Run locally in background, detached from terminal |
+| `nohup grafana-menubar >> ~/Library/Logs/grafana-menubar.log 2>&1 &` then `disown` | Run global install in background, detached from terminal |
 | `npm install -g .` | Install globally |
 | `grafana-menubar` | Run the app (after global install) |
 
