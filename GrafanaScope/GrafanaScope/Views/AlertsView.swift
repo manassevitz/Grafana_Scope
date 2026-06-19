@@ -67,8 +67,6 @@ struct AlertsView: View {
         Group {
             if groups.isEmpty {
                 banner("No instances. Open Settings to add Grafana.", tone: .ok)
-            } else if total == 0 && errors.isEmpty {
-                banner("No active alerts across any instance", tone: .ok)
             } else if total > 0 {
                 banner("\(total) active alert\(total == 1 ? "" : "s")", tone: .warn)
             } else {

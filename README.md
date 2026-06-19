@@ -111,17 +111,9 @@ Use **Verify connection** to check `/api/health` before saving.
 ~/Library/Application Support/Grafana_Scope/config.json
 ```
 
-Example shape: [`config.example.json`](config.example.json) (generic URLs/tokens only — safe for the repo).
+Example shape: [`config.example.json`](config.example.json).
 
 **Local config is never committed** (`~/Library/Application Support/Grafana_Scope/config.json` is gitignored).
-
-To load demo instances locally (for screenshots), then restore yours:
-
-```bash
-./GrafanaScope/scripts/load-demo-config.sh    # backs up config.json → config.json.backup
-# … capture screenshots …
-./GrafanaScope/scripts/restore-config-backup.sh
-```
 
 ## Grafana API
 
@@ -135,19 +127,9 @@ Auth: `Authorization: Bearer {token}`
 ## Verify before release
 
 ```bash
-# 1. Build
 ./GrafanaScope/scripts/build.sh
-
-# 2. Run locally
 open "build/Grafana Scope.app"
-
-# 3. Reinstall service (optional)
-./GrafanaScope/scripts/install-service.sh
-
-# 4. Refresh README screenshots (real captures required)
-#    See docs/screenshots/README.md
-./GrafanaScope/scripts/load-demo-config.sh   # optional demo data
-python3 GrafanaScope/scripts/prepare-readme-screenshots.py
+./GrafanaScope/scripts/install-service.sh   # optional
 ```
 
 Checklist:
@@ -158,7 +140,6 @@ Checklist:
 - [ ] Instance reorder reflected in alerts panel
 - [ ] Custom color picker saves and appears in alerts groups
 - [ ] Launch at login shows **Grafana Scope** with app icon in System Settings
-- [ ] README screenshots contain no internal URLs or tokens
 
 ## Project layout
 
@@ -170,12 +151,9 @@ GrafanaScope/
     build.sh                 Build .app bundle + AppIcon.icns
     install-service.sh       Install to ~/Applications + login item
     uninstall-service.sh     Remove app and config
-    load-demo-config.sh      Load config.example.json locally (backs up yours first)
-    restore-config-backup.sh Restore config from before demo load
     generate-icons.py        Regenerate icons from LogoSource.png
-    prepare-readme-screenshots.py
 config.example.json          Example config shape
-docs/screenshots/            README screenshots (processed)
+docs/screenshots/            README screenshots
 scripts/                     Shortcuts → GrafanaScope/scripts/
 build/                       Generated app (gitignored)
 ```

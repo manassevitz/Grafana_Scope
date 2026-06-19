@@ -32,8 +32,9 @@ assets/.icon.iconset/
 assets/icon.iconset/
 assets/icon.icns
 
-# README screenshot sources (raw captures; run prepare-readme-screenshots.py)
+# README screenshot sources (local only)
 docs/screenshots/source/
+docs/screenshots/README.md
 
 # Local config / secrets (never commit)
 **/config.json
