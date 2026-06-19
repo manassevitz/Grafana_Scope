@@ -4,6 +4,10 @@ const { menubar } = require('menubar');
 const config = require('./lib/config');
 const grafana = require('./lib/grafana');
 
+if (process.platform === 'darwin') {
+  app.setName('Grafana Scope');
+}
+
 app.dock?.hide();
 
 let mb;

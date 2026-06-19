@@ -1,5 +1,6 @@
 node_modules/
 dist/
-devtools/
+devtools/*
+!devtools/launch-agent.js
 .DS_Store
 *.log

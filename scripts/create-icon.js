@@ -19,14 +19,18 @@ function toBlackTemplateSvg(buffer) {
     .replace(/class="st0"/g, 'fill="#000000"');
 }
 
-const svg = Buffer.from(toBlackTemplateSvg(fs.readFileSync(svgPath)));
-
-for (const size of [18, 36]) {
-  const resvg = new Resvg(svg, {
+function renderPng(svgBuffer, size) {
+  const resvg = new Resvg(svgBuffer, {
     fitTo: { mode: 'width', value: size },
     background: 'transparent',
   });
-  const png = resvg.render().asPng();
+  return resvg.render().asPng();
+}
+
+const templateSvg = Buffer.from(toBlackTemplateSvg(fs.readFileSync(svgPath)));
+
+for (const size of [18, 36]) {
+  const png = renderPng(templateSvg, size);
   const filename = size === 18 ? 'iconTemplate.png' : 'iconTemplate@2x.png';
   fs.writeFileSync(path.join(assetsDir, filename), png);
 }

@@ -3,6 +3,15 @@
 const { spawn } = require('child_process');
 const path = require('path');
 
+const serviceCommand = process.argv.find(
+  (arg) => arg === 'install-service' || arg === 'uninstall-service' || arg === 'status',
+);
+
+if (serviceCommand) {
+  require('../devtools/launch-agent').run(serviceCommand);
+  return;
+}
+
 const electronPath = require('electron');
 const appPath = path.join(__dirname, '..');
 
