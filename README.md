@@ -1,163 +1,187 @@
 # Grafana Scope
 
-Monitor active Grafana alerts from the macOS menu bar.
+Native **macOS menu bar app** (Swift) that monitors active Grafana Unified Alerting alerts across multiple instances.
 
-> **Repo:** [github.com/manassevitz/Grafana_Scope](https://github.com/manassevitz/Grafana_Scope)
-
-<p align="center">
-  <img src="docs/screenshots/menubar-hero.png" alt="Grafana Scope in the macOS menu bar" width="720" />
-</p>
-
-## Screenshots
-
-Real captures from the app (sample data for the demo).
-
-| Alerts | Settings |
-|:---:|:---:|
-| <img src="docs/screenshots/alerts.png" alt="Alerts grouped by Grafana instance" width="320" /> | <img src="docs/screenshots/settings-root.png" alt="Settings menu" width="320" /> |
-
-| Instances | Add instance |
-|:---:|:---:|
-| <img src="docs/screenshots/settings.png" alt="Manage Grafana instances" width="320" /> | <img src="docs/screenshots/instance-form.png" alt="Add or edit a Grafana instance" width="320" /> |
-
-## Requirements
-
-- macOS
-- Node.js 18 or later
-
-## Installation
-
-### Option 1: Install globally
-
-```bash
-npm install -g .
-```
-
-Then run:
-
-```bash
-grafana-menubar
-```
-
-### Option 2: Run locally
-
-```bash
-npm install
-npm start
-```
-
-`npm start` keeps the terminal open. To run it in the background, detached from the terminal:
-
-```bash
-cd /path/to/grafana-scope
-nohup ./node_modules/.bin/electron . >> ~/Library/Logs/grafana-menubar.log 2>&1 &
-disown
-```
-
-Or after a global install:
-
-```bash
-nohup grafana-menubar >> ~/Library/Logs/grafana-menubar.log 2>&1 &
-disown
-```
-
-`disown` prevents macOS Terminal from killing the app when you close the window. If Terminal asks whether to terminate running processes, choose **Cancel** or close the window only after running `disown`.
-
-### Option 3: LaunchAgent (recommended)
-
-Run the app as a macOS LaunchAgent — no terminal, starts at login:
-
-```bash
-npm install
-npm run install-service
-```
-
-| Action | Local | Global install |
-|--------|-------|------------------|
-| Install | `npm run install-service` | `grafana-menubar install-service` |
-| Uninstall | `npm run uninstall-service` | `grafana-menubar uninstall-service` |
-| Status | `npm run service-status` | `grafana-menubar status` |
-
-Logs are written to `~/Library/Logs/grafana-menubar.log`. Re-run `install-service` after moving the project or updating dependencies so paths stay correct.
-
-> **Note:** When run via LaunchAgent, macOS Settings may still show the generic Electron icon until the app is packaged as a `.app` bundle (planned for a future release).
-
-To stop the app, use **Settings → Quit**, or from the project directory:
-
-```bash
-pkill -f "electron.*$(pwd)"
-```
-
-## Configuration
-
-1. **Left-click** the menu bar icon to view alerts.
-2. Click **⚙** in the header to open Settings.
-3. Add your Grafana instances with:
-   - **Name** — display label (e.g. Production)
-   - **URL** — Grafana base URL (e.g. `https://grafana.example.com`)
-   - **API Token** — service token with alert read permissions
-   - **Color** — optional color to identify the instance
-
-### Create an API token in Grafana
-
-1. Go to **Administration → Service accounts** (or **API Keys** on older versions).
-2. Create a token with **Viewer** role or alert read permissions.
-3. Copy the token (format `glsa_...`).
 
 ## Features
 
-- Menu bar icon with alert count next to it
-- Alerts grouped by instance (expand/collapse)
-- Custom color per instance
-- Alert name and severity badge
-- Manual refresh (↻) and auto-refresh (configurable interval)
-- Settings: manage instances, refresh interval, refresh now, quit
+- Menu bar icon with active alert count
+- Alerts grouped by Grafana instance (expand/collapse)
+- Preset palette **or custom color** per instance
+- Alert name + severity badge
+- Manual refresh and configurable auto-refresh (15–3600 s)
+- Separate **Settings** and **About** windows
+- **Launch at login** via macOS login item API (`SMAppService`)
+- Read-only (does not silence alerts or open Grafana)
+- No Dock icon — lives in the menu bar only
+- Template icon adapts to light/dark menu bar
 
-## API used
+## Requirements
 
-Fetches active alerts from Grafana Alertmanager (read-only):
+- macOS 13 (Ventura) or later
+- Xcode Command Line Tools: `xcode-select --install`
 
+## Quick start
+
+```bash
+git clone <repo-url>
+cd grafana-scope
+
+# Build
+./GrafanaScope/scripts/build.sh
+
+# Run once (foreground)
+open "build/Grafana Scope.app"
 ```
-GET /api/alertmanager/grafana/api/v2/alerts?active=true&silenced=false&inhibited=false
+
+1. Click the **lightning bolt** icon in the menu bar.
+2. Open **Settings** from the gear menu (or right-click the menu bar icon).
+3. Add your Grafana instances under **Instances**.
+
+## Install for daily use
+
+Installs to `~/Applications/Grafana Scope.app`, registers a login item, and starts the app.
+
+```bash
+./GrafanaScope/scripts/install-service.sh
 ```
 
-The `silenced=false` filter is in the API query only — the app does not silence alerts or open Grafana in the browser.
+Uninstall (removes app, login item, and local config):
 
-## Commands
-
-| Command | Description |
-|---------|-------------|
-| `npm install` | Install dependencies |
-| `npm start` | Run the app locally (foreground, keeps terminal open) |
-| `nohup ./node_modules/.bin/electron . >> ~/Library/Logs/grafana-menubar.log 2>&1 &` then `disown` | Run locally in background, detached from terminal |
-| `nohup grafana-menubar >> ~/Library/Logs/grafana-menubar.log 2>&1 &` then `disown` | Run global install in background, detached from terminal |
-| `npm run install-service` | Install LaunchAgent (starts at login, no terminal) |
-| `npm run uninstall-service` | Remove LaunchAgent |
-| `npm run service-status` | Show LaunchAgent install/load status |
-| `npm install -g .` | Install globally |
-| `grafana-menubar` | Run the app (after global install) |
-| `grafana-menubar install-service` | Install LaunchAgent after global install |
-| `grafana-menubar uninstall-service` | Remove LaunchAgent after global install |
-| `grafana-menubar status` | Show LaunchAgent status after global install |
-
-## Project layout
+```bash
+./GrafanaScope/scripts/uninstall-service.sh
+```
 
 | Path | Purpose |
 |------|---------|
-| `src/` | App source (Electron main, renderer, preload) |
-| `assets/` | Grafana SVG and generated menu bar icons |
-| `scripts/` | App runtime helpers (`postinstall`, icon generation) |
-| `devtools/` | Local setup and development tools (LaunchAgent, screenshots) |
-| `bin/` | CLI entry point (`grafana-menubar`) |
+| `~/Applications/Grafana Scope.app` | Application bundle |
+| `~/Library/Application Support/Grafana_Scope/config.json` | Instance config |
+| `~/Library/Logs/grafana-scope.log` | Service log (legacy LaunchAgent only) |
 
-The menu bar icon is generated from `assets/grafana_icon.svg` during `npm install` (`scripts/create-icon.js`).
+After install, enable **Launch at login** in **Settings → General** if it is not already on. The entry in **System Settings → Login Items** should show **Grafana Scope** with the app icon (not a generic `exec` icon).
 
-## Notes
+## UI overview
 
-- The app does not appear in the Dock (menu bar only).
-- Configuration is stored in `~/Library/Application Support/grafana-menubar/`.
-- Compatible with Grafana Unified Alerting (Grafana 8+).
+### Alerts panel
 
-## License
+![Alerts panel](docs/screenshots/alerts.png)
 
-MIT
+Alerts are grouped by instance. Click a group header to expand or collapse. Severity badges: critical, warning, low.
+
+### Settings menu
+
+![Settings menu](docs/screenshots/settings-menu.png)
+
+Right-click the menu bar icon or use the gear menu for Refresh, About, Settings, and Quit.
+
+### Settings → General
+
+![General settings](docs/screenshots/settings-general.png)
+
+| Option | Description |
+|--------|-------------|
+| **Refresh interval** | Auto-refresh every 15–3600 seconds (saved automatically) |
+| **Launch at login** | Register/unregister macOS login item |
+| **Refresh now** | Manual poll |
+| **Version** | App version and build |
+
+### Settings → Instances
+
+![Instances editor](docs/screenshots/settings-instances.png)
+
+Each instance has a name, URL, API token, enabled flag, and color. Use the preset dots or the **Custom color** picker.
+
+Reorder instances with **↑ ↓** or drag rows in the sidebar. Click **Save** (`⌘S`) after editing.
+
+### Add instance
+
+![Add instance](docs/screenshots/settings-add-instance.png)
+
+Use **Verify connection** to check `/api/health` before saving.
+
+| Field | Example |
+|-------|---------|
+| Name | `Production` |
+| URL | `https://grafana.example.com` |
+| API Token | Grafana service account token with alert read access |
+
+## Configuration file
+
+```
+~/Library/Application Support/Grafana_Scope/config.json
+```
+
+Example shape: [`config.example.json`](config.example.json) (generic URLs/tokens only — safe for the repo).
+
+**Local config is never committed** (`~/Library/Application Support/Grafana_Scope/config.json` is gitignored).
+
+To load demo instances locally (for screenshots), then restore yours:
+
+```bash
+./GrafanaScope/scripts/load-demo-config.sh    # backs up config.json → config.json.backup
+# … capture screenshots …
+./GrafanaScope/scripts/restore-config-backup.sh
+```
+
+## Grafana API
+
+| Endpoint | Purpose |
+|----------|---------|
+| `GET /api/alertmanager/grafana/api/v2/alerts?active=true&silenced=false&inhibited=false` | Active alerts |
+| `GET /api/health` | Connection test |
+
+Auth: `Authorization: Bearer {token}`
+
+## Verify before release
+
+```bash
+# 1. Build
+./GrafanaScope/scripts/build.sh
+
+# 2. Run locally
+open "build/Grafana Scope.app"
+
+# 3. Reinstall service (optional)
+./GrafanaScope/scripts/install-service.sh
+
+# 4. Refresh README screenshots (real captures required)
+#    See docs/screenshots/README.md
+./GrafanaScope/scripts/load-demo-config.sh   # optional demo data
+python3 GrafanaScope/scripts/prepare-readme-screenshots.py
+```
+
+Checklist:
+
+- [ ] Menu bar icon visible; count updates after refresh
+- [ ] Settings opens in its own window (not overlay)
+- [ ] Instance selection loads the correct editor
+- [ ] Instance reorder reflected in alerts panel
+- [ ] Custom color picker saves and appears in alerts groups
+- [ ] Launch at login shows **Grafana Scope** with app icon in System Settings
+- [ ] README screenshots contain no internal URLs or tokens
+
+## Project layout
+
+```
+GrafanaScope/
+  GrafanaScope/              Swift source (SwiftUI + MenuBarExtra)
+    Resources/               LogoSource.png, generated AppIcon / MenuBarIcon
+  scripts/
+    build.sh                 Build .app bundle + AppIcon.icns
+    install-service.sh       Install to ~/Applications + login item
+    uninstall-service.sh     Remove app and config
+    load-demo-config.sh      Load config.example.json locally (backs up yours first)
+    restore-config-backup.sh Restore config from before demo load
+    generate-icons.py        Regenerate icons from LogoSource.png
+    prepare-readme-screenshots.py
+config.example.json          Example config shape
+docs/screenshots/            README screenshots (processed)
+scripts/                     Shortcuts → GrafanaScope/scripts/
+build/                       Generated app (gitignored)
+```
+
+## Development
+
+Built with SwiftUI and `MenuBarExtra` (`.window` style). No Xcode project required — compiles with `swiftc` via `build.sh`.
+
+To change the version shown in Settings, edit `CFBundleShortVersionString` and `CFBundleVersion` in `GrafanaScope/GrafanaScope/Info.plist`.

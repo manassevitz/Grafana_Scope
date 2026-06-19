@@ -1,14 +1,21 @@
-[
-  {
-    "name": "Production",
-    "url": "https://grafana.example.com",
-    "apiToken": "glsa_YOUR_TOKEN_HERE",
-    "enabled": true
-  },
-  {
-    "name": "Staging",
-    "url": "https://grafana-staging.example.com",
-    "apiToken": "glsa_ANOTHER_TOKEN",
-    "enabled": true
-  }
-]
+{
+  "instances": [
+    {
+      "id": "00000000-0000-0000-0000-000000000001",
+      "name": "Production",
+      "url": "https://grafana.example.com",
+      "apiToken": "demo-token-production",
+      "enabled": true,
+      "color": "#30D158"
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000002",
+      "name": "Staging",
+      "url": "https://grafana-staging.example.com",
+      "apiToken": "demo-token-staging",
+      "enabled": true,
+      "color": "#FF9F0A"
+    }
+  ],
+  "refreshIntervalSeconds": 60
+}

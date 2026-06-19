@@ -1,6 +1,51 @@
-node_modules/
-dist/
-devtools/*
-!devtools/launch-agent.js
+# Build output
+/build/
+/dist/
+/GrafanaScope/build/
+*.app
+
+# Compiled binary (intermediate, root build dir only)
+/build/GrafanaScope
+
+# macOS
 .DS_Store
+._*
+.AppleDouble
+.LSOverride
+
+# Xcode / Swift
+*.xcuserstate
+*.xcuserdatad/
+DerivedData/
+.swiftpm/
+.build/
+
+# Python
+__pycache__/
+*.py[cod]
+.Python
+*.egg-info/
+
+# Icon generation temp
+*.iconset/
+assets/.icon.iconset/
+assets/icon.iconset/
+assets/icon.icns
+
+# README screenshot sources (raw captures; run prepare-readme-screenshots.py)
+docs/screenshots/source/
+
+# Local config / secrets (never commit)
+**/config.json
+**/config.json.backup
+.env
+.env.*
+
+# Logs
 *.log
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*~
