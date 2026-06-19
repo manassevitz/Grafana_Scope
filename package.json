@@ -1,0 +1,33 @@
+{
+  "name": "grafana-menubar",
+  "version": "1.0.0",
+  "description": "Monitor active Grafana alerts from the macOS menu bar",
+  "main": "src/main.js",
+  "bin": {
+    "grafana-menubar": "./bin/grafana-menubar.js"
+  },
+  "scripts": {
+    "start": "electron .",
+    "postinstall": "node scripts/postinstall.js"
+  },
+  "keywords": [
+    "grafana",
+    "alerts",
+    "menubar",
+    "macos",
+    "monitoring"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^33.2.1",
+    "electron-store": "^8.2.0",
+    "menubar": "^9.5.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2"
+  }
+}

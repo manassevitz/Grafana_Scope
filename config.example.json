@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Production",
+    "url": "https://grafana.example.com",
+    "apiToken": "glsa_YOUR_TOKEN_HERE",
+    "enabled": true
+  },
+  {
+    "name": "Staging",
+    "url": "https://grafana-staging.example.com",
+    "apiToken": "glsa_ANOTHER_TOKEN",
+    "enabled": true
+  }
+]
