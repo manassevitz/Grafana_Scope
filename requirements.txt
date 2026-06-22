@@ -1,0 +1,2 @@
+# Build-time only (generate-icons.py). Not needed to run the app.
+Pillow>=10.0.0

@@ -5,7 +5,13 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFilter
+try:
+    from PIL import Image, ImageDraw, ImageFilter
+except ImportError as exc:
+    raise SystemExit(
+        "Missing Pillow (import PIL). Install build dependencies:\n"
+        "  pip3 install -r requirements.txt"
+    ) from exc
 
 ROOT = Path(__file__).resolve().parents[1]
 RES = ROOT / "GrafanaScope" / "Resources"

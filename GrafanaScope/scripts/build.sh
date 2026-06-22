@@ -11,6 +11,13 @@ TARGET="${ARCH}-apple-macos13.0"
 
 mkdir -p "$BUILD"
 
+if ! python3 -c "import PIL" 2>/dev/null; then
+  echo "Missing Python dependency: Pillow (import PIL)."
+  echo "Install build dependencies:"
+  echo "  pip3 install -r \"$ROOT/requirements.txt\""
+  exit 1
+fi
+
 python3 "$(dirname "$0")/generate-icons.py"
 
 SWIFT_FILES=(
