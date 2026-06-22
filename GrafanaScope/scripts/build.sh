@@ -12,44 +12,12 @@ TARGET="${ARCH}-apple-macos13.0"
 mkdir -p "$BUILD"
 
 RES="$SRC/Resources"
-ICON_FILES=(
-  "$RES/AppIcon.png"
-  "$RES/MenuBarIcon.png"
-  "$RES/MenuBarIcon@2x.png"
-)
-
-needs_icon_regen=false
-if [[ "${REGENERATE_ICONS:-}" == "1" ]]; then
-  needs_icon_regen=true
-else
-  for icon in "${ICON_FILES[@]}"; do
-    if [[ ! -f "$icon" ]]; then
-      needs_icon_regen=true
-      break
-    fi
-  done
-  if [[ "$needs_icon_regen" == false && -f "$RES/LogoSource.png" ]]; then
-    for icon in "${ICON_FILES[@]}"; do
-      if [[ "$RES/LogoSource.png" -nt "$icon" ]]; then
-        needs_icon_regen=true
-        break
-      fi
-    done
-  fi
-fi
-
-if [[ "$needs_icon_regen" == true ]]; then
-  if ! python3 -c "import PIL" 2>/dev/null; then
-    echo "Missing Python dependency: Pillow (import PIL)."
-    echo "Install build dependencies:"
-    echo "  pip3 install -r \"$ROOT/requirements.txt\""
+for icon in AppIcon.png MenuBarIcon.png MenuBarIcon@2x.png; do
+  if [[ ! -f "$RES/$icon" ]]; then
+    echo "Missing required icon: $RES/$icon"
     exit 1
   fi
-  python3 "$(dirname "$0")/generate-icons.py"
-else
-  echo "Using committed icons in Resources/ (skip generate-icons.py)."
-  echo "To regenerate from LogoSource.png: REGENERATE_ICONS=1 ./GrafanaScope/scripts/build.sh"
-fi
+done
 
 SWIFT_FILES=(
   "$SRC/GrafanaScopeApp.swift"

@@ -20,12 +20,8 @@ Native **macOS menu bar app** (Swift) that monitors active Grafana Unified Alert
 
 - macOS 13 (Ventura) or later
 - Xcode Command Line Tools: `xcode-select --install`
-- Python 3 + **Pillow** — only if you change `LogoSource.png` and need to regenerate icons (optional for a normal build; committed PNGs are used as-is)
 
-```bash
-pip3 install -r requirements.txt   # only when regenerating icons
-python3 GrafanaScope/scripts/generate-icons.py
-```
+No Python or extra packages needed to build — icon PNGs are already in the repo.
 
 ## Quick start
 
@@ -33,7 +29,7 @@ python3 GrafanaScope/scripts/generate-icons.py
 git clone <repo-url>
 cd grafana-scope
 
-# Build (uses AppIcon.png / MenuBarIcon*.png already in the repo)
+# Build
 ./GrafanaScope/scripts/build.sh
 
 # Run once (foreground)
@@ -157,9 +153,8 @@ GrafanaScope/
     build.sh                 Build .app bundle + AppIcon.icns
     install-service.sh       Install to ~/Applications + login item
     uninstall-service.sh     Remove app and config
-    generate-icons.py        Optional: regenerate icons after editing LogoSource.png
+    generate-icons.py        Maintainer only (pip install Pillow); not used by build.sh
 config.example.json          Example config shape
-requirements.txt             Python deps for build (Pillow)
 docs/screenshots/            README screenshots
 scripts/                     Shortcuts → GrafanaScope/scripts/
 build/                       Generated app (gitignored)

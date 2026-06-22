@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Generate app + menubar icons from LogoSource.png."""
+"""Maintainer-only: regenerate app + menubar icons from LogoSource.png.
+
+Not used by build.sh. Icons are committed in Resources/ for end users.
+Requires: pip3 install Pillow
+"""
 
 from __future__ import annotations
 
@@ -9,8 +13,8 @@ try:
     from PIL import Image, ImageDraw, ImageFilter
 except ImportError as exc:
     raise SystemExit(
-        "Missing Pillow (import PIL). Install build dependencies:\n"
-        "  pip3 install -r requirements.txt"
+        "Missing Pillow (import PIL). Maintainer setup:\n"
+        "  pip3 install Pillow"
     ) from exc
 
 ROOT = Path(__file__).resolve().parents[1]
