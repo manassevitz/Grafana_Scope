@@ -19,28 +19,42 @@ Native **macOS menu bar app** (Swift) that monitors active Grafana Unified Alert
 ## Requirements
 
 - macOS 13 (Ventura) or later
-- Xcode Command Line Tools: `xcode-select --install`
 
-No Python or extra packages needed to build — icon PNGs are already in the repo.
+**End users:** download a pre-built release — no Xcode or build step.
 
-## Quick start
+**From source:** Xcode Command Line Tools (`xcode-select --install`) only if you clone and compile yourself.
+
+## Download (recommended)
+
+1. Open **[Releases](https://github.com/manassevitz/Grafana_Scope/releases)** and download the latest `Grafana-Scope-*-macos-*.zip`.
+2. Unzip and drag **Grafana Scope.app** to **Applications** (or run the install script below).
+3. Open the app from Applications. Allow it in **System Settings → Privacy & Security** if macOS blocks an unsigned build.
+
+Or install from the terminal (downloads the latest GitHub release):
 
 ```bash
-git clone <repo-url>
-cd grafana-scope
-
-# Build
-./GrafanaScope/scripts/build.sh
-
-# Run once (foreground)
-open "build/Grafana Scope.app"
+curl -fsSL https://raw.githubusercontent.com/manassevitz/Grafana_Scope/main/GrafanaScope/scripts/install-release.sh -o /tmp/install-grafana-scope.sh
+bash /tmp/install-grafana-scope.sh          # latest
+bash /tmp/install-grafana-scope.sh v1.4     # specific version
 ```
 
 1. Click the **lightning bolt** icon in the menu bar.
 2. Open **Settings** from the gear menu (or right-click the menu bar icon).
 3. Add your Grafana instances under **Instances**.
 
-## Install for daily use
+> Release zips are built for the runner CPU (Apple Silicon on current CI). Intel Macs: build from source (see below).
+
+## Build from source
+
+```bash
+git clone <repo-url>
+cd grafana-scope
+
+./GrafanaScope/scripts/build.sh
+open "build/Grafana Scope.app"
+```
+
+## Install for daily use (from source checkout)
 
 Installs to `~/Applications/Grafana Scope.app`, registers a login item, and starts the app.
 
@@ -126,6 +140,15 @@ Example shape: [`config.example.json`](config.example.json).
 
 Auth: `Authorization: Bearer {token}`
 
+## Maintainer: publish a release
+
+```bash
+./GrafanaScope/scripts/package-release.sh
+# Upload dist/Grafana-Scope-*.zip to the matching tag on GitHub Releases
+```
+
+Pushing a `v*` tag also triggers [.github/workflows/release.yml](.github/workflows/release.yml) to build and attach the zip automatically.
+
 ## Verify before release
 
 ```bash
@@ -151,7 +174,9 @@ GrafanaScope/
     Resources/               LogoSource.png + committed AppIcon / MenuBarIcon PNGs
   scripts/
     build.sh                 Build .app bundle + AppIcon.icns
-    install-service.sh       Install to ~/Applications + login item
+    package-release.sh       Build + zip for GitHub Releases
+    install-release.sh       Download latest release zip and install
+    install-service.sh       Install from local build/ to ~/Applications
     uninstall-service.sh     Remove app and config
     generate-icons.py        Maintainer only (pip install Pillow); not used by build.sh
 config.example.json          Example config shape
